@@ -1,0 +1,9 @@
+# tested with Python 3.12.13 on Ubuntu 24.04, NVIDIA RTX 3060 (CUDA 13.0)
+torch==2.12.0
+numpy==2.4.4
+scipy==1.18.1
+pandas==3.0.6
+h5py==3.16.0
+onnx==1.23.1
+onnxruntime==1.31.1
+matplotlib==3.11.2

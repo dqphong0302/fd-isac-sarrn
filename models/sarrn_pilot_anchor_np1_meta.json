@@ -1,0 +1,30 @@
+{
+  "np": 1,
+  "params": 904200,
+  "best_epoch": 81,
+  "best_val_nmse_db": -31.464245973535995,
+  "val_anchor_nmse_db": -30.10591697692871,
+  "train_file": "data/etilde_fix/train_np1.h5",
+  "val_file": "data/etilde_fix/val_np1.h5",
+  "train_seed": 4001,
+  "val_seed": 5002,
+  "train_time_s": 70.59359622001648,
+  "hyper": {
+    "np": 1,
+    "train": "data/etilde_fix/train_np1.h5",
+    "val": "data/etilde_fix/val_np1.h5",
+    "out": "runs/etilde_fix/np1",
+    "epochs": 100,
+    "batch": 64,
+    "lr": 0.001,
+    "wd": 0.0001,
+    "dropout": 0.2,
+    "alpha": 0.5,
+    "seed": 42,
+    "anchor_key": null,
+    "extra_key": null,
+    "fb": null,
+    "rel_residual": false,
+    "loss": "linear"
+  }
+}

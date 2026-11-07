@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+data/
+runs/
+*.h5
+*.log
+.DS_Store
+*.tif
+._*
