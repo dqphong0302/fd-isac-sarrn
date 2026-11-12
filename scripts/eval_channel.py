@@ -139,7 +139,7 @@ def main():
            "sarrn_v36_conj": "SARRN v36 + conj equaliser (as submitted)",
            "sarrn_etilde": "SARRN trained on E_tilde",
            "ddls": "DD-LS (pilot + decided data, no NN)",
-           "sarrn_da": "SARRN-DA (data-aided, proposed)"}
+           "sarrn_da": "SARRN (proposed: DD-LS anchor + ResMLP)"}
     lines = []
     for Np in map(int, a.np.split(",")):
         names = sorted({r[1] for r in rows if r[0] == Np}, key=lambda m: list(lab).index(m) if m in lab else 99)

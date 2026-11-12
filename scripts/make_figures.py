@@ -19,21 +19,25 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NC, NS = 1024, 512
-STY = {  # (np, method): label, color, marker, linestyle
+STY = {  # (np, method): label, color, marker, linestyle  -- names as in the revised paper
     (1, "ls"): ("LS, 1 pilot", "#7f7f7f", "o", "--"),
-    (2, "ls"): ("LS, 2 pilots", "#1f77b4", "s", "--"),
-    (2, "rls"): ("RLS, 2 pilots (reset per frame)", "#17becf", "v", "--"),
-    (2, "rls_carryP"): ("RLS, 2 pilots (P not reset, as submitted)", "#bcbd22", "1", ":"),
-    (1, "lmmse"): ("LMMSE (known PDP), 1 pilot", "#9467bd", "D", "--"),
+    (1, "rls"): ("RLS, 1 pilot", "#17becf", "v", "--"),
+    (1, "lmmse"): ("LMMSE, 1 pilot", "#9467bd", "D", "-."),
     (1, "ridge"): ("Ridge anchor (no NN), 1 pilot", "#8c564b", "x", ":"),
-    (1, "sarrn_v36"): ("SARRN as submitted, 1 pilot", "#e377c2", "^", "-."),
+    (1, "sarrn_v36"): ("ResMLP, original submission, 1 pilot", "#e377c2", "^", ":"),
     (1, "sarrn_etilde"): ("SARRN retrained on residual, 1 pilot", "#ff7f0e", "<", "-."),
-    (1, "ddls"): ("DD-LS (semi-blind, no NN), 1 pilot", "#2ca02c", ">", "-"),
-    (1, "sarrn_da"): ("SARRN-DA (proposed), 1 pilot", "#d62728", "*", "-"),
-    (1, "genie"): ("Perfect CSI", "#000000", "", "-"),
+    (1, "ddls"): ("DD-LS, 1 pilot", "#2ca02c", ">", "-"),
+    (1, "sarrn_da"): ("SARRN, 1 pilot", "#d62728", "*", "-"),
+    (1, "genie"): ("Perfect CSI", "#000000", "", ":"),
+    (2, "ls"): ("LS, 2 pilots", "#1f77b4", "s", "--"),
+    (2, "rls"): ("RLS, 2 pilots", "#17becf", "v", "--"),
+    (2, "rls_carryP"): ("RLS, 2 pilots (original submission code)", "#bcbd22", "1", ":"),
+    (2, "lmmse"): ("LMMSE, 2 pilots", "#9467bd", "D", "-."),
+    (2, "ddls"): ("DD-LS, 2 pilots", "#2ca02c", ">", "-"),
 }
-FIG_NMSE = [(1, "ls"), (2, "ls"), (2, "rls"), (1, "lmmse"), (1, "sarrn_v36"), (1, "ddls"), (1, "sarrn_da")]
-FIG_BER = [(1, "ls"), (2, "ls"), (2, "rls"), (1, "ddls"), (1, "sarrn_da"), (1, "genie")]
+# Fig 3 and the BER figure: every estimator with ONE pilot symbol (2-pilot results: S2 Fig and tables)
+FIG_NMSE = [(1, "ls"), (1, "rls"), (1, "lmmse"), (1, "ddls"), (1, "sarrn_da")]
+FIG_BER = FIG_NMSE + [(1, "genie")]
 
 
 def boot_ci(x, n=2000, seed=0):

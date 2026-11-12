@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 eval_mismatch.py — robustness of the estimators to channel-model mismatch (Reviewer Minor 4).
-No retraining: the SARRN-DA model trained on the nominal 4-tap quasi-static channel is used as is.
+No retraining: the SARRN model trained on the nominal 4-tap quasi-static channel is used as is.
 
 Variants (Table III radar scene, noise 0 dB, corrected radar):
   nominal      4 taps, PDP [0 -9.7 -19.2 -22.8] dB, static over the frame

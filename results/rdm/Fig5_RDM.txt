@@ -1,0 +1,5 @@
+true r=[5, 12, 20] v=[-20, -10, 15]
+Before iteration: det r=[4.8, 20.33, 11.72] v=[-20.17, 15.16, -10.16]
+After 2 iterations, LS (1 pilot): det r=[11.95, 4.98, 19.98] v=[-9.87, -20.03, 15.02]
+After 2 iterations, DD-LS (1 pilot): det r=[11.95, 4.98, 19.98] v=[-9.87, -20.03, 15.02]
+After 2 iterations, SARRN (1 pilot): det r=[11.95, 4.98, 19.98] v=[-9.87, -20.03, 15.02]

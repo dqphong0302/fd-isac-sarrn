@@ -70,7 +70,7 @@ def main():
     s = ort.InferenceSession(a.onnx, so, providers=["CPUExecutionProvider"])
     inp = s.get_inputs()[0]
     z = np.zeros((1, inp.shape[1]), np.float32)
-    rows.append(("SARRN-DA ResMLP inference (ONNX, batch 1)", "cpu-1thr", tm(lambda: s.run(None, {inp.name: z}), 200)))
+    rows.append(("SARRN ResMLP inference (ONNX, batch 1)", "cpu-1thr", tm(lambda: s.run(None, {inp.name: z}), 200)))
     K = S.NC * S.NS; L = 4
     ops = [
         ("ResMLP", f"{(inp.shape[1]*512 + 3*512*512 + 512*8)/1e6:.2f} M real MAC"),

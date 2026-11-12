@@ -2,7 +2,7 @@
 """
 rdm_figure.py — range–Doppler maps for the revised Figs 4–5 (Table III scenario, gamma_c = 30 dB,
 noise 0 dB, one fixed frame). Panel (a): before iteration (GSFDIC iteration 1 input);
-panels (b)–(d): after two iterations with LS (1 pilot), DD-LS (1 pilot) and SARRN-DA (1 pilot).
+panels (b)–(d): after two iterations with LS (1 pilot), DD-LS (1 pilot) and SARRN (1 pilot).
 True target positions are overlaid (+), CFAR detections (o). Uses the corrected periodogram;
 --legacy-radar reproduces the submitted mapping for comparison.
 """
@@ -57,7 +57,7 @@ def main():
     ests = {"LS (1 pilot)": lambda xp, yp, **k: G.ridge_np(xp, yp, 0.0)[0],
             "DD-LS (1 pilot)": G.DDLS()}
     if os.path.exists(a.da_onnx):
-        ests["SARRN-DA (1 pilot)"] = G.SARRN_DA(a.da_onnx)
+        ests["SARRN (1 pilot)"] = G.SARRN_DA(a.da_onnx)
     pers, dets = {}, {}
     for name, est in ests.items():
         kp = []

@@ -11,7 +11,7 @@
 | SARRN v36 + conj equaliser (as submitted) | -21.2 / 1.3e-01 | -30.8 / 4.5e-03 | -41.4 / 0.0e+00 | -49.6 / 0.0e+00 |
 | SARRN trained on E_tilde | -21.9 / 1.1e-01 | -32.7 / 2.3e-03 | -41.9 / 0.0e+00 | -50.3 / 0.0e+00 |
 | DD-LS (pilot + decided data, no NN) | -24.9 / 1.1e-01 | -52.8 / 2.2e-03 | -71.1 / 0.0e+00 | -80.8 / 0.0e+00 |
-| SARRN-DA (data-aided, proposed) | -25.6 / 1.1e-01 | -53.6 / 2.2e-03 | -71.1 / 0.0e+00 | -80.7 / 0.0e+00 |
+| SARRN (proposed: DD-LS anchor + ResMLP) | -25.6 / 1.1e-01 | -53.6 / 2.2e-03 | -71.1 / 0.0e+00 | -80.7 / 0.0e+00 |
 
 ### Np = 2  (mean NMSE dB / mean BER over 50 frames)
 | method | 0 | 10 | 20 | 30 |
