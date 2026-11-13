@@ -14,7 +14,7 @@
 | Ridge/LS anchor, 1 pilot (1024 samples) | cpu | 0.039 |
 | DD-LS on full frame (524,288 samples) | cpu | 32.262 |
 | Equalisation (IIR 1/h) of full frame | cpu | 6.982 |
-| SARRN ResMLP inference (ONNX, batch 1) | cpu-1thr | 0.065 |
+| SARRN-DA ResMLP inference (ONNX, batch 1) | cpu-1thr | 0.065 |
 
 | Item | Operation count |
 |---|---|

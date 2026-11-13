@@ -1,7 +1,6 @@
 """
 sarrn.receiver — IFD-DIC (GSFDIC) receiver: corrected 2-D periodogram, CA-CFAR,
-channel estimators (LS/ridge, LMMSE, RLS, DD-LS; class SARRN = network of the original submission,
-class SARRN_DA = the SARRN of the revised paper), data modulation and the
+channel estimators (LS/ridge, LMMSE, RLS, DD-LS, SARRN, SARRN-DA), data modulation and the
 iterative detection / cancellation chain (port of final/NMSE_{LS,RLS,DL}.m).
 
 Flow per frame (identical for every method, common random numbers):

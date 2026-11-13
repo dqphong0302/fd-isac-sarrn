@@ -22,7 +22,6 @@ random seeds. Running the pipeline below on the authors' machine gives exactly t
 | `results/` | Published result files (per-frame CSV, summary tables with 95 % confidence intervals). |
 | `matlab/original/` | MATLAB code of the original submission, unchanged, including the scripts that produced the original Fig 3. |
 | `matlab/fixed/` | The four MATLAB files corrected during the revision; each change is marked `% FIX`. |
-| `matlab/figures/` | MATLAB scripts that draw Fig 3 (NMSE, one pilot), the BER figure and S2 Fig from `results/figures/nmse_ber_table.csv`; they save editable `.fig` and vector `.eps` files in `results/figures/matlab/`. Fonts, sizes and colours are set in the `SETTINGS` block of each file. Tested with MATLAB R2018a. |
 | `original_python/` | Original training / ONNX export scripts of the submission. |
 | `run_all.sh` | Runs the full pipeline. |
 
@@ -52,12 +51,10 @@ the evaluation uses the released models in `models/`.
 | Fig 3, Fig 6, Table 4, Table 6 | `scripts/eval_channel.py --mc 50 --np 1,2 --methods ...` and `--methods genie` | `results/fig3_final/`, `results/fig3_genie/` |
 | Table 5, Fig 4 (radar) | `scripts/eval_radar.py --n 300 --gammas 0,10,20,30 --est ddls --modes fixed,legacy` | `results/radar/` |
 | Fig 5, S3 Fig (range-Doppler maps) | `scripts/rdm_figure.py [--legacy-radar]` | `results/rdm/` |
-| Radar result per channel estimator (Concern #6) | `scripts/radar_by_estimator.py --n 300 --gammas 0,10,20,30 --nfb 4` then `scripts/radar_by_estimator_summary.py results/radar_by_estimator` | `results/radar_by_estimator/` |
 | Table 7 (run time) | `scripts/timing.py --reps 20` | `results/timing.md` |
 | Table 8 (model mismatch) | `scripts/eval_mismatch.py --mc 20` | `results/mismatch/` |
 | S2 Table (QPSK, 16-QAM) | `scripts/eval_channel.py --mod qpsk|16qam --gamma 0:2:40 ...` then `scripts/modulation_table.py` | `results/mod_*/` |
 | Figure files, S1 Table | `scripts/make_figures.py`, `scripts/make_latex_tables.py` | `results/figures/` |
-| Editable figures (`.fig`, `.eps`) | in MATLAB: `matlab/figures/plot_fig3_nmse.m`, `plot_fig6_ber.m`, `plot_s2fig_pilot_matched.m` | `results/figures/matlab/` |
 
 The exact arguments are in `run_all.sh`.
 
@@ -87,17 +84,6 @@ The exact arguments are in `run_all.sh`.
   work of the group; they are provided only to document the original submission.
 * Numbers depend on floating-point libraries. Other GPUs or library versions may change the last digits of
   the NMSE values, but not the conclusions.
-
-## Versions
-
-* **v1.1.0** — Names as in the revised paper: the proposed estimator is **SARRN** (DD-LS anchor + ResMLP;
-  code key `sarrn_da`, class `SARRN_DA`); the network of the original submission is "ResMLP, original
-  submission" (code key `sarrn_v36`). Fig 3 and the BER figure show one-pilot estimators only.
-  Added `scripts/radar_by_estimator.py` (radar result per channel estimator on the same 300 random scenes)
-  with results in `results/radar_by_estimator/`, MATLAB figure scripts in `matlab/figures/` (editable
-  `.fig`/`.eps` in `results/figures/matlab/`), and the range-Doppler figure in `results/rdm/`.
-  No simulation result changed: `results/figures/nmse_ber_table.csv` is byte-identical to v1.0.0.
-* **v1.0.0** — Code, models and results for the PLOS ONE revision (PONE-D-26-41608).
 
 ## Citation
 
