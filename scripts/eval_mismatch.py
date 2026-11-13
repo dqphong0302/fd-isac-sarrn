@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 eval_mismatch.py — robustness of the estimators to channel-model mismatch (Reviewer Minor 4).
-No retraining: the SARRN-DA model trained on the nominal 4-tap quasi-static channel is used as is.
+No retraining: every trained model (SARRN v36, ChannelNet) is used as trained on the nominal 4-tap
+quasi-static channel; LMMSE keeps assuming the nominal power-delay profile.
 
 Variants (Table III radar scene, noise 0 dB, corrected radar):
   nominal      4 taps, PDP [0 -9.7 -19.2 -22.8] dB, static over the frame
@@ -30,22 +31,30 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mc", type=int, default=20)
     ap.add_argument("--gammas", default="10,20,30")
-    ap.add_argument("--da-onnx", default="models/sarrn_da_np1.onnx")
+    ap.add_argument("--v36-onnx", default="models/sarrn_submitted_v36.onnx")
+    ap.add_argument("--channelnet", default="", help="checkpoint channelnet.pt (optional)")
     ap.add_argument("--out", default="results/mismatch")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     dev = torch.device("cuda")
     rot = complex(math.cos(S.PSK_PHASE), math.sin(S.PSK_PHASE))
     variants = ["nominal", "doppler_100", "doppler_500", "doppler_1000", "taps6", "pdp_flat", "si_fast"]
+    rls = G.RLS(carry=False)
     ests = {"ls_1p": (1, lambda xp, yp, **k: G.ridge_np(xp, yp, 0.0)[0]),
-            "ls_2p": (2, lambda xp, yp, **k: G.ridge_np(xp, yp, 0.0)[0]),
-            "ddls_1p": (1, G.DDLS()),
-            "sarrn_da_1p": (1, G.SARRN_DA(a.da_onnx))}
+            "rls_1p": (1, rls),
+            "lmmse_1p": (1, None),     # set per gamma (nominal PDP assumed)
+            "ridge_1p": (1, lambda xp, yp, **k: G.ridge_np(xp, yp, S.RIDGE_LAMBDA)[0]),
+            "sarrn_v36_1p": (1, G.SARRN(a.v36_onnx))}
+    if a.channelnet:
+        from sarrn.channelnet import ChannelNetEst
+        ests["channelnet_1p"] = (1, ChannelNetEst(a.channelnet))
     f = open(os.path.join(a.out, "mismatch_frames.csv"), "w", newline="")
     w = csv.writer(f); w.writerow(["variant", "method", "gamma_db", "mc", "nmse", "ber"])
     agg = {}
     for v in variants:
         for g in map(float, a.gammas.split(",")):
+            Rh = 10 ** (S.HCOM_DB / 10) * 10 ** (g / 10)
+            ests["lmmse_1p"] = (1, lambda xp, yp, Rh=Rh, **k: G.lmmse_np(xp, yp, Rh))
             for mc in range(a.mc):
                 rng = np.random.default_rng(7000 + mc)
                 seed = 50000 + int(g) * 100 + mc
@@ -74,6 +83,8 @@ def main():
                 y = S.fir_channel(S.col_flatten(x_td), torch.as_tensor(h, device=dev), nu)
                 A = S.fft_c(Ytg + Ysi + S.col_unflatten(y, S.NC, S.NS)) + Rn
                 for name, (Np, est) in ests.items():
+                    if hasattr(est, "reset_frame"):
+                        est.reset_frame()
                     hh, ber, *_ = G.gsfdic_chain(A, F, x_td, Fcom, bits, Np, est)[-1]
                     err = np.sum(np.abs(hh - h_ref) ** 2) + np.sum(np.abs(h[4:]) ** 2)
                     nm = err / np.sum(np.abs(h) ** 2)

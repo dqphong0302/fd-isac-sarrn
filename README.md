@@ -52,7 +52,7 @@ the evaluation uses the released models in `models/`.
 | Table 5, Fig 4 (radar) | `scripts/eval_radar.py --n 300 --gammas 0,10,20,30 --est ddls --modes fixed,legacy` | `results/radar/` |
 | Fig 5, S3 Fig (range-Doppler maps) | `scripts/rdm_figure.py [--legacy-radar]` | `results/rdm/` |
 | Table 7 (run time) | `scripts/timing.py --reps 20` | `results/timing.md` |
-| Table 8 (model mismatch) | `scripts/eval_mismatch.py --mc 20` | `results/mismatch/` |
+| Table 8 (model mismatch), first revision | `scripts/eval_mismatch.py` of release v1.0.0 | `results/mismatch/` |
 | S2 Table (QPSK, 16-QAM) | `scripts/eval_channel.py --mod qpsk|16qam --gamma 0:2:40 ...` then `scripts/modulation_table.py` | `results/mod_*/` |
 | Figure files, S1 Table | `scripts/make_figures.py`, `scripts/make_latex_tables.py` | `results/figures/` |
 
@@ -77,6 +77,21 @@ The exact arguments are in `run_all.sh`.
    is still available as method `rls_carryP`.
 3. **NMSE_LS.m**: noise level aligned with the other estimators (0 dB).
 4. **NMSE_DL.m**: transpose `h.'` instead of the conjugate transpose `h'`.
+
+## Second revision round (v1.2.0)
+
+Added for the reviewer's second-round requests. All estimators use the **same single pilot symbol** and
+the same 50 test frames per γc; SARRN is the network of the original submission
+(`models/sarrn_submitted_v36.onnx`). Run with `bash run_all.sh channelnet`.
+
+| Item | Command | Output |
+|---|---|---|
+| ChannelNet baseline [Soltani et al., IEEE Commun. Lett. 2019], re-implemented in `sarrn/channelnet.py` (adaptation documented in the file header) | `scripts/make_dataset_channelnet.py`, `scripts/train_channelnet.py` (same training frames and seeds as SARRN) | `models/channelnet_np1.pt` (+ `_meta.json`, `_history.csv`) |
+| Pilot-matched NMSE / BER: LS, RLS, LMMSE, ridge without network, ChannelNet, SARRN (1 pilot each) | `scripts/eval_channel.py --mc 50 --np 1 --methods ls,ridge,lmmse,rls,sarrn_v36,channelnet --channelnet ...` | `results/fig3_major4/` |
+| Fig 3 in MATLAB (.fig, .eps) | `matlab/fig3_major4/plot_fig3_nmse.m` (reads `data/nmse_table.csv`, a copy of `results/fig3_major4/nmse_ber_table.csv`) | `matlab/fig3_major4/output/` |
+| Channel-model mismatch with the same six estimators (no retraining) | `scripts/eval_mismatch.py --mc 20 --channelnet models/channelnet_np1.pt` | `results/mismatch_v36/` |
+| Parameters, operations and CPU inference time of SARRN and ChannelNet | `scripts/complexity.py` | `results/complexity.md` |
+| Training script of the submitted network (16,000 / 4,000 split of the 20,000 samples of `matlab/original/generate_dataset_v36_optimized.m`, seed 42, checkpoint chosen on the validation part only) | `original_python/training_v36_optimized.py` | `models/sarrn_submitted_v36.onnx` |
 
 ## Notes
 

@@ -46,6 +46,7 @@ def main():
     ap.add_argument("--etilde-runs", default="", help="dir with np{k}/sarrn.onnx trained on E_tilde")
     ap.add_argument("--methods", default="", help="comma subset of method names")
     ap.add_argument("--da-runs", default="", help="dir with np{k}/sarrn.onnx (data-aided model)")
+    ap.add_argument("--channelnet", default="", help="ChannelNet checkpoint dir with np{k}/channelnet.pt (Major 4)")
     ap.add_argument("--mod", default="bpsk", choices=["bpsk", "qpsk", "16qam"], help="data modulation (pilots: BPSK)")
     ap.add_argument("--legacy-radar", action="store_true", help="reproduce calc_periodogram.m mapping bug")
     a = ap.parse_args()
@@ -71,6 +72,11 @@ def main():
         sarrn_et = SARRN(p_et) if p_et and os.path.exists(p_et) else None
         p_da = os.path.join(a.da_runs, f"np{Np}", "sarrn.onnx") if a.da_runs else ""
         sarrn_da = SARRN_DA(p_da) if p_da and os.path.exists(p_da) else None
+        p_cn = os.path.join(a.channelnet, f"np{Np}", "channelnet.pt") if a.channelnet else ""
+        cnet = None
+        if p_cn and os.path.exists(p_cn):
+            from sarrn.channelnet import ChannelNetEst
+            cnet = ChannelNetEst(p_cn)
         for gi, g in enumerate(gammas):
             com_db = g + a.noise_db
             h_true = mags * np.exp(1j * H_PH) * math.sqrt(10 ** (com_db / 10))
@@ -93,6 +99,8 @@ def main():
             methods["ddls"] = (DDLS(), False)
             if sarrn_da is not None:
                 methods["sarrn_da"] = (sarrn_da, False)
+            if cnet is not None:
+                methods["channelnet"] = (cnet, False)
             if a.methods:
                 keep = a.methods.split(",")
                 methods = {k: v for k, v in methods.items() if k in keep}
@@ -139,7 +147,8 @@ def main():
            "sarrn_v36_conj": "SARRN v36 + conj equaliser (as submitted)",
            "sarrn_etilde": "SARRN trained on E_tilde",
            "ddls": "DD-LS (pilot + decided data, no NN)",
-           "sarrn_da": "SARRN-DA (data-aided, proposed)"}
+           "sarrn_da": "SARRN-DA (data-aided, proposed)",
+           "channelnet": "ChannelNet (Soltani 2019, retrained)"}
     lines = []
     for Np in map(int, a.np.split(",")):
         names = sorted({r[1] for r in rows if r[0] == Np}, key=lambda m: list(lab).index(m) if m in lab else 99)

@@ -1,0 +1,13 @@
+{
+ "best_val_mse_srcnn": 0.0015742962792515754,
+ "best_val_mse_dncnn": 0.0008309182585217058,
+ "params": 227970,
+ "ls_taps": 64,
+ "epochs_sr": 300,
+ "epochs_dn": 200,
+ "bs": 128,
+ "lr": 0.001,
+ "train": "data/cn_train_np1.h5",
+ "val": "data/cn_val_np1.h5",
+ "cmdline": "scripts/train_channelnet.py --train data/cn_train_np1.h5 --val data/cn_val_np1.h5 --out runs/channelnet/np1"
+}
